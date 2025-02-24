@@ -463,4 +463,39 @@ mod tests {
 
         assert!(list.pop_tail() == Some(100));
     }
+
+    #[test]
+    fn speed_testing() {
+        let mut list = JankedList::new();
+        let jstart = std::time::Instant::now();
+        (0..10_000).for_each(|x| {
+            list.push_back(x);
+        });
+        (0..10_000).for_each(|x| {
+            list.push_front(x);
+        });
+        (0..5_000).for_each(|_| {
+            list.pop_tail();
+            list.pop_head();
+        });
+        let jend = jstart.elapsed().as_millis();
+
+        let mut list = std::collections::LinkedList::new();
+        let lstart = std::time::Instant::now();
+        (0..10_000).for_each(|x| {
+            list.push_back(x);
+        });
+        (0..10_000).for_each(|x| {
+            list.push_front(x);
+        });
+        (0..5_000).for_each(|_| {
+            list.pop_front();
+            list.pop_back();
+        });
+        let lend = lstart.elapsed().as_millis();
+
+        println!("stdlib: {:?}", lend);
+        println!("jank:   {:?}", jend);
+        panic!();
+    }
 }
